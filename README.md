@@ -4,7 +4,9 @@
 
 ## Installation
 
-    $ gem install chart_js
+This gem is still in development. Install with `--pre`.
+
+    $ gem install chart_js --pre
 
 ## Usage
 
