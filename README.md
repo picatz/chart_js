@@ -57,6 +57,10 @@ get "/" do
 end
 ```
 
+## Screenshot
+
+![example](https://i.imgur.com/kFl4efW.png)
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
