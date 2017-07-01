@@ -65,17 +65,17 @@ module ChartJS
       SecureRandom.uuid
     end
 
-    def script(config: to_json, id: random_id)
+    def script(config: to_json, id: random_id, chart_name: id)
       "<script>
           var config = #{config}
           window.onload = function() {
             var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
-            new Chart(ctx, config);
+            var #{chart_name} = new Chart(ctx, config);
           };
       </script>" 
     end
 
-    def to_html(width: "60%", heigth: width, head: true, cdn: head, version: "2.6.0", body: true, id: random_id, script: true)
+    def to_html(width: "60%", heigth: width, head: true, cdn: head, version: "2.6.0", body: true, id: random_id, script: true, chart_name: id)
       str = []
       if cdn
         str << "<head>#{cdn(version: version)}</head>" 
@@ -85,7 +85,7 @@ module ChartJS
       str << "<canvas id=\"#{id}\"/>"
       str << "</div>"
       str << "</body>" if body
-      str << script(id: id) if script
+      str << script(id: id, chart_name: chart_name) if script
       str.join("\n")
     end
 

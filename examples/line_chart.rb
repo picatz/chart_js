@@ -16,3 +16,4 @@ ChartJS.line do
     end 
   end
 end
+
