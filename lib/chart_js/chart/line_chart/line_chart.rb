@@ -63,11 +63,13 @@ module ChartJS
     def script(config: to_json, id: random_id, chart_name: id)
       "<script>
           var config = #{config};
-          var #{chart_name.gsub("-","_")};
-          window.onload = function() {
-            var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
-            var #{chart_name.gsub("-","_")} = new Chart(ctx, config);
-          };
+          var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
+          var #{chart_name.gsub("-","_")} = new Chart(ctx, config);
+          // var #{chart_name.gsub("-","_")};
+          // window.onload = function() {
+          //  var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
+          //  var #{chart_name.gsub("-","_")} = new Chart(ctx, config);
+          //};
       </script>" 
     end
 
