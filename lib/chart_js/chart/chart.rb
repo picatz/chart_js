@@ -3,16 +3,19 @@ require "securerandom"
 require_relative "data.rb"
 require_relative "opts.rb"
 require_relative "file.rb"
+require_relative "event_stream.rb"
 
 module ChartJS
 
   class Chart
 
     def initialize(&block)
-      @type = nil
-      @data = nil
-      @opts = nil
-      @file = false
+      @type      = nil
+      @data      = nil
+      @opts      = nil
+      @file      = false
+      @stream    = false
+      @chart_obj = 'chart' + SecureRandom.uuid.gsub("-","")
       build(&block) if block_given?
     end
 
@@ -61,21 +64,31 @@ module ChartJS
       "##{SecureRandom.hex(3)}"
     end
 
-    def random_id
-      SecureRandom.uuid
+    def chart_obj(value = nil)
+      return @chart_obj if value.nil?
+      @chart_obj = value
+    end
+    
+    def random_id(force: false)
+      return @id unless @id.nil? or force 
+      @id = SecureRandom.uuid
     end
 
-    def script(config: to_json, id: random_id, chart_name: id)
+    
+    def event_stream(path, chart: chart_obj, &block)
+      @stream = EventStream.new(path, chart)
+      @stream.build(&block) if block_given?
+    end
+
+    def script(config: to_json, id: random_id, chart: chart_obj)
       "<script>
           var config = #{config}
-          window.onload = function() {
-            var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
-            var #{chart_name} = new Chart(ctx, config);
-          };
+          var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
+          var #{chart} = new Chart(ctx, config);
       </script>" 
     end
 
-    def to_html(width: "60%", heigth: width, head: true, cdn: head, version: "2.6.0", body: true, id: random_id, script: true, chart_name: id)
+    def to_html(width: "60%", heigth: width, head: true, cdn: head, version: "2.6.0", body: true, id: random_id, script: true, chart: chart_obj, stream: true)
       str = []
       if cdn
         str << "<head>#{cdn(version: version)}</head>" 
@@ -85,7 +98,8 @@ module ChartJS
       str << "<canvas id=\"#{id}\"/>"
       str << "</div>"
       str << "</body>" if body
-      str << script(id: id, chart_name: chart_name) if script
+      str << script(id: id, chart: chart) if script
+      str << @stream.to_html if @stream && stream 
       str.join("\n")
     end
 
