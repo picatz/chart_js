@@ -9,7 +9,7 @@ module ChartJS
 
     def initialize(label, &block)
       @container = Hash.new
-      fill(false)
+      #fill(false)
       label(label)
       build(&block)
     end

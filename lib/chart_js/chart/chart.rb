@@ -29,7 +29,21 @@ module ChartJS
     end
 
     def to_h
-      { type: @type, data: @data.to_h, options: @opts.to_h }
+      case type
+      when 'pie'
+        { type: @type, data: @data.to_h(:pie), options: @opts.to_h }
+      when 'doughnut'
+        { type: @type, data: @data.to_h(:pie), options: @opts.to_h }
+      when 'line'
+        data = @data.to_h(false)
+        data['datasets'].each do |set|
+          set['fill'] = false unless set['fill']
+        end  
+        #data['fill'] = false unless data['fill']
+        { type: @type, data: data, options: @opts.to_h }
+      else
+        { type: @type, data: @data.to_h(false), options: @opts.to_h }
+      end
     end
 
     def to_json(type = :pretty)
@@ -68,13 +82,13 @@ module ChartJS
       return @chart_obj if value.nil?
       @chart_obj = value
     end
-    
+
     def random_id(force: false)
       return @id unless @id.nil? or force 
       @id = SecureRandom.uuid
     end
 
-    
+
     def event_stream(path, chart: chart_obj, &block)
       @stream = EventStream.new(path, chart)
       @stream.build(&block) if block_given?

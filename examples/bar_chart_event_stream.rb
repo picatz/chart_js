@@ -11,31 +11,20 @@ get "/update_source", provides: 'text/event-stream' do
   stream(:keep_open) do |out|
     loop do
       out << ChartJS.data do
-        { label: Time.now.strftime("%r"), 
-          value: WillowRun::Status.new.getinfo.agrctlrssi 
-          color: "##{SecureRandom.hex(6)}"
-        }
+        { label: Time.now.strftime("%r"), value: WillowRun::Status.new.getinfo.agrctlrssi }
       end
-      sleep 5
+      sleep 2
     end
   end
 end
 
 get "/" do
-  chart = ChartJS.build do
-    type "line"
+  chart = ChartJS.bar do
     data do
       labels Array.new
       dataset WillowRun::Status.new.getinfo.ssid do
-        color Array.new
+        color :random
         data Array.new
-        point do
-          radius 0
-          hit_radius 3
-        end
-        line do
-          tension :false
-        end
       end
     end 
     event_stream "/update_source" do
