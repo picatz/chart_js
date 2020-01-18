@@ -66,7 +66,7 @@ module ChartJS
       @opts = Opts.new.build(&block)
     end
 
-    def cdn(version: "2.6.0", min: true)
+    def cdn(version: "2.9.3", min: true)
       if min
         "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/#{version}/Chart.min.js\"></script>"
       else
