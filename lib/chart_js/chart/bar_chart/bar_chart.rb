@@ -44,7 +44,7 @@ module ChartJS
       @opts = Opts.new.build(&block)
     end
 
-    def cdn(version: "2.6.0", min: true)
+    def cdn(version: "2.9.3", min: true)
       if min
         "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/#{version}/Chart.min.js\"></script>"
       else
@@ -67,13 +67,13 @@ module ChartJS
             var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
             new Chart(ctx, config);
           };
-      </script>" 
+      </script>"
     end
 
     def to_html(width: "60%", heigth: width, head: true, cdn: head, version: "2.6.0", body: true, id: random_id, script: true)
       str = []
       if cdn
-        str << "<head>#{cdn(version: version)}</head>" 
+        str << "<head>#{cdn(version: version)}</head>"
       end
       str << "<body>" if body
       str << "<div id=\"canvas-holder\" style=\"width:#{width} heigth:#{heigth}\">"
