@@ -38,7 +38,7 @@ module ChartJS
         data = @data.to_h(false)
         data['datasets'].each do |set|
           set['fill'] = false unless set['fill']
-        end  
+        end
         #data['fill'] = false unless data['fill']
         { type: @type, data: data, options: @opts.to_h }
       else
@@ -84,7 +84,7 @@ module ChartJS
     end
 
     def random_id(force: false)
-      return @id unless @id.nil? or force 
+      return @id unless @id.nil? or force
       @id = SecureRandom.uuid
     end
 
@@ -99,13 +99,13 @@ module ChartJS
           var config = #{config}
           var ctx = document.getElementById(\"#{id}\").getContext(\"2d\");
           var #{chart} = new Chart(ctx, config);
-      </script>" 
+      </script>"
     end
 
     def to_html(width: "60%", heigth: width, head: true, cdn: head, version: "2.6.0", body: true, id: random_id, script: true, chart: chart_obj, stream: true)
       str = []
       if cdn
-        str << "<head>#{cdn(version: version)}</head>" 
+        str << "<head>#{cdn(version: version)}</head>"
       end
       str << "<body>" if body
       str << "<div id=\"canvas-holder\" style=\"width:#{width} heigth:#{heigth}\">"
@@ -113,7 +113,7 @@ module ChartJS
       str << "</div>"
       str << "</body>" if body
       str << script(id: id, chart: chart) if script
-      str << @stream.to_html if @stream && stream 
+      str << @stream.to_html if @stream && stream
       str.join("\n")
     end
 
