@@ -13,16 +13,26 @@ module ChartJS
       label(label)
       build(&block)
     end
-    
+
     def build(&block)
       instance_eval(&block)
-      @container 
+      @container
+    end
+
+    def method_missing(m, *args, &block)
+      m = m.to_s
+      if m.to_s.include?('_')
+        parts = m.split('_').collect(&:capitalize)
+        parts[0] = parts[0].downcase
+        m = parts.join
+      end
+      @container[m] = args.first
     end
 
     def data(value)
       @container['data'] = value
     end
-   
+
     def label(value)
       @container['label'] = value
     end
@@ -30,7 +40,7 @@ module ChartJS
     def fill(value = true)
       @container['fill'] = value
     end
-    
+
     def axis_id(value, axis)
       case axis
       when :x
@@ -39,15 +49,15 @@ module ChartJS
         @container['yAxisID'] = value
       end
     end
-    
+
     def color(value = :random, type = :both)
       if value == :random
         c = "##{SecureRandom.hex(3)}"
-        color c, :border     if type == :both || type == :border 
+        color c, :border     if type == :both || type == :border
         color c, :background if type == :both || type == :background
-        return 
+        return
       end
-      case type 
+      case type
       when :border
         @container['borderColor'] = value
       when :background
@@ -57,7 +67,7 @@ module ChartJS
         color value, :background
       end
     end
-    
+
     def span_gaps(value = true)
       @container['spanGaps'] = value
     end
@@ -69,11 +79,11 @@ module ChartJS
     def border(&block)
       @container = Border.new(@container).build(&block)
     end
-    
+
     def point(&block)
       @container = Point.new(@container).build(&block)
     end
-    
+
     def line(&block)
       @container = Line.new(@container).build(&block)
     end
